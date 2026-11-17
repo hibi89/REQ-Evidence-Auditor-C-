@@ -1,0 +1,128 @@
+{
+  "schema_version": "reqea.worker.v1",
+  "owner": "C",
+  "repo": "hibi89/REQ-Evidence-Auditor-C-",
+  "branch": "feature/reqea-c-evidence-p1-20261118",
+  "starting_sha": "f62a1f938031d57343498b57a507ef03ee3f67ca",
+  "canonical_a_design_sha": "e58e14ee4ef84dfc226d657cfe45b1d40cfb9ba9",
+  "contract_version": "reqea.v1",
+  "allowed_paths": [
+    "src/reqea_evidence/**",
+    "tests/c/**"
+  ],
+  "phase": "P0_READY_P1_NOT_STARTED",
+  "official_rate": "UNASSESSED",
+  "swus": [
+    {
+      "id": "C-01",
+      "req_ids": [
+        "REQ-019",
+        "REQ-021"
+      ],
+      "title": "REQ-ID·explicit_ref·criteria 정적 후보 상호 연결",
+      "owner": "C",
+      "depends_on": [],
+      "allowed_paths": [
+        "src/reqea_evidence/matcher.py"
+      ],
+      "acceptance": "동일 경로/심볼 근거 후보 및 criteria 별 불명확성",
+      "status": "READY",
+      "implementation_status": "NOT_STARTED",
+      "verification_status": "NOT_RUN",
+      "retry_stage": "NONE",
+      "initial_no_progress_attempts": 0,
+      "redesign_no_progress_attempts": 0
+    },
+    {
+      "id": "C-02",
+      "req_ids": [
+        "REQ-020",
+        "REQ-023"
+      ],
+      "title": "상태 결정기: candidate/review/gap/unassessed",
+      "owner": "C",
+      "depends_on": [
+        "C-01"
+      ],
+      "allowed_paths": [
+        "src/reqea_evidence/classify.py"
+      ],
+      "acceptance": "미지원/제한 scan 시 false PASS/false GAP 금지",
+      "status": "READY",
+      "implementation_status": "NOT_STARTED",
+      "verification_status": "NOT_RUN",
+      "retry_stage": "NONE",
+      "initial_no_progress_attempts": 0,
+      "redesign_no_progress_attempts": 0
+    },
+    {
+      "id": "C-03",
+      "req_ids": [
+        "REQ-022",
+        "REQ-027"
+      ],
+      "title": "SHA 불일치·모순 근거 경고",
+      "owner": "C",
+      "depends_on": [
+        "C-02"
+      ],
+      "allowed_paths": [
+        "src/reqea_evidence/provenance.py"
+      ],
+      "acceptance": "다른 SHA 근거 합치지 않고 warnings로 처리",
+      "status": "READY",
+      "implementation_status": "NOT_STARTED",
+      "verification_status": "NOT_RUN",
+      "retry_stage": "NONE",
+      "initial_no_progress_attempts": 0,
+      "redesign_no_progress_attempts": 0
+    },
+    {
+      "id": "C-04",
+      "req_ids": [
+        "REQ-024",
+        "REQ-029"
+      ],
+      "title": "evaluate() + deterministic audit JSON 집계",
+      "owner": "C",
+      "depends_on": [
+        "C-01",
+        "C-02",
+        "C-03"
+      ],
+      "allowed_paths": [
+        "src/reqea_evidence/__init__.py"
+      ],
+      "acceptance": "정렬된 findings, status/summary 일관",
+      "status": "READY",
+      "implementation_status": "NOT_STARTED",
+      "verification_status": "NOT_RUN",
+      "retry_stage": "NONE",
+      "initial_no_progress_attempts": 0,
+      "redesign_no_progress_attempts": 0
+    },
+    {
+      "id": "C-05",
+      "req_ids": [
+        "REQ-025",
+        "REQ-026",
+        "REQ-028"
+      ],
+      "title": "XSS-safe HTML 오프라인 report renderer",
+      "owner": "C",
+      "depends_on": [
+        "C-04"
+      ],
+      "allowed_paths": [
+        "src/reqea_evidence/report.py"
+      ],
+      "acceptance": "untrusted title/path escape, secret/code full text 제외",
+      "status": "READY",
+      "implementation_status": "NOT_STARTED",
+      "verification_status": "NOT_RUN",
+      "retry_stage": "NONE",
+      "initial_no_progress_attempts": 0,
+      "redesign_no_progress_attempts": 0
+    }
+  ]
+}
