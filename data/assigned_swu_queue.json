@@ -10,7 +10,7 @@
     "src/reqea_evidence/**",
     "tests/c/**"
   ],
-  "phase": "P0_READY_P1_NOT_STARTED",
+  "phase": "P1_C_MODULE_IMPLEMENTED_UNVERIFIED",
   "official_rate": "UNASSESSED",
   "swus": [
     {
@@ -26,8 +26,8 @@
         "src/reqea_evidence/matcher.py"
       ],
       "acceptance": "동일 경로/심볼 근거 후보 및 criteria 별 불명확성",
-      "status": "READY",
-      "implementation_status": "NOT_STARTED",
+      "status": "IMPLEMENTED_UNVERIFIED",
+      "implementation_status": "IMPLEMENTED_UNVERIFIED",
       "verification_status": "NOT_RUN",
       "retry_stage": "NONE",
       "initial_no_progress_attempts": 0,
@@ -48,8 +48,8 @@
         "src/reqea_evidence/classify.py"
       ],
       "acceptance": "미지원/제한 scan 시 false PASS/false GAP 금지",
-      "status": "READY",
-      "implementation_status": "NOT_STARTED",
+      "status": "IMPLEMENTED_UNVERIFIED",
+      "implementation_status": "IMPLEMENTED_UNVERIFIED",
       "verification_status": "NOT_RUN",
       "retry_stage": "NONE",
       "initial_no_progress_attempts": 0,
@@ -70,8 +70,8 @@
         "src/reqea_evidence/provenance.py"
       ],
       "acceptance": "다른 SHA 근거 합치지 않고 warnings로 처리",
-      "status": "READY",
-      "implementation_status": "NOT_STARTED",
+      "status": "IMPLEMENTED_UNVERIFIED",
+      "implementation_status": "IMPLEMENTED_UNVERIFIED",
       "verification_status": "NOT_RUN",
       "retry_stage": "NONE",
       "initial_no_progress_attempts": 0,
@@ -94,8 +94,8 @@
         "src/reqea_evidence/__init__.py"
       ],
       "acceptance": "정렬된 findings, status/summary 일관",
-      "status": "READY",
-      "implementation_status": "NOT_STARTED",
+      "status": "IMPLEMENTED_UNVERIFIED",
+      "implementation_status": "IMPLEMENTED_UNVERIFIED",
       "verification_status": "NOT_RUN",
       "retry_stage": "NONE",
       "initial_no_progress_attempts": 0,
@@ -117,12 +117,19 @@
         "src/reqea_evidence/report.py"
       ],
       "acceptance": "untrusted title/path escape, secret/code full text 제외",
-      "status": "READY",
-      "implementation_status": "NOT_STARTED",
+      "status": "IMPLEMENTED_UNVERIFIED",
+      "implementation_status": "IMPLEMENTED_UNVERIFIED",
       "verification_status": "NOT_RUN",
       "retry_stage": "NONE",
       "initial_no_progress_attempts": 0,
       "redesign_no_progress_attempts": 0
     }
-  ]
+  ],
+  "official_verification_rate": "UNASSESSED",
+  "last_code_sha": "7a3c760ea36f0fbb5fcfdf41aadfb5aa976c7f60",
+  "local_smoke": {
+    "syntax": "PASS",
+    "unit_tests": "15/15 PASS",
+    "p2": "NOT_RUN"
+  }
 }
