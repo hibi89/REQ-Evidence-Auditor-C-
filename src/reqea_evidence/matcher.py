@@ -119,13 +119,15 @@ def match_requirement(requirement: dict, files: dict, source_sha: str) -> dict:
     # Indexed symbol/path naming may nominate a weak candidate, but never certify functionality.
     req_id = requirement["req_id"]
     token = req_id.lower().replace("-", "_")
+    # Token boundaries prevent REQ-019 from matching unrelated REQ-0190 etc.
+    identifier = re.compile(r"(?<![A-Za-z0-9])" + re.escape(token) + r"(?![A-Za-z0-9])")
     for path, found in files.items():
         basename = path.rsplit("/", 1)[-1].lower().replace("-", "_")
-        if token in basename:
+        if identifier.search(basename):
             evidence.setdefault((path, "", 0), {"path": path, "symbol": "", "line": 0,
                "kind": "static", "source_sha": source_sha})
         for s in found["symbols"]:
-            if token in s["name"].lower():
+            if identifier.search(s["name"].lower()):
                 evidence.setdefault((path, s["name"], s["line"]),
                     {"path": path, "symbol": s["name"], "line": s["line"],
                      "kind": "static", "source_sha": source_sha})

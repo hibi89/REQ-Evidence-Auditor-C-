@@ -39,6 +39,10 @@ def limited_scan(index: dict) -> tuple[bool, list[str]]:
        limits["scanned_files"] < 0 or limits["skipped_files"] < 0:
         raise ValueError("code_index.limits must have valid counters")
     warnings = []
+    # A contradictory file count cannot support a complete or trustworthy scan.
+    files = index.get("files")
+    if isinstance(files, list) and limits["scanned_files"] < len(files):
+        warnings.append("INDEX_SCAN_COUNT_MISMATCH")
     if limits["truncated"]:
         warnings.append("SCAN_TRUNCATED")
     if limits["skipped_files"]:

@@ -41,6 +41,30 @@ class EvidenceTests(unittest.TestCase):
         self.assertEqual(a["summary"]["code_candidates"], 1)
         self.assertNotIn("VERIFIED", json.dumps(a))
 
+    def test_identifier_never_matches_other_req_number(self):
+        m, i = fixture()
+        m["requirements"][0]["explicit_refs"] = []
+        i["files"][0]["path"] = "src/req_0199.py"
+        i["files"][0]["symbols"] = [{"name": "helper_req_0190", "kind": "function", "line": 1}]
+        a = evaluate(m, i, {})
+        self.assertEqual(a["status"], "UNASSESSED")
+        self.assertEqual(a["findings"][0]["evidence"], [])
+        i["files"][0]["path"] = "src/req_019.py"
+        a = evaluate(m, i, {})
+        self.assertEqual(a["status"], "CODE_CANDIDATE")
+        self.assertEqual(a["findings"][0]["evidence"][0]["path"], "src/req_019.py")
+
+    def test_inconsistent_scanned_file_count_cannot_be_candidate_or_gap(self):
+        m, i = fixture()
+        i["limits"]["scanned_files"] = 0
+        a = evaluate(m, i, {})
+        self.assertNotEqual(a["status"], "CODE_CANDIDATE")
+        self.assertIn("INDEX_SCAN_COUNT_MISMATCH", a["warnings"])
+        i["files"] = []
+        i["limits"]["scanned_files"] = 0
+        a = evaluate(m, i, {})
+        self.assertEqual(a["status"], "GAP_CANDIDATE")
+
     def test_sha_mismatch_removes_evidence(self):
         m, i = fixture()
         i["source_sha"] = OTHER_SHA
