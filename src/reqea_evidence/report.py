@@ -34,6 +34,10 @@ def render_html(audit: dict) -> str:
     """Render only known contract fields with escaped text, no JS/external assets."""
     if not isinstance(audit, dict) or audit.get("schema_version") != "reqea.v1":
         raise ValueError("expected reqea.v1 audit")
+    from .provenance import valid_sha
+    sha = audit.get("source_sha")
+    if not valid_sha(sha):
+        sha = "UNVERIFIED"
     findings = audit.get("findings")
     if not isinstance(findings, list) or len(findings) > 100_000:
         raise ValueError("audit.findings must be a bounded list")
@@ -45,9 +49,9 @@ def render_html(audit: dict) -> str:
               "small{color:#475569}code{overflow-wrap:anywhere}section{margin-bottom:2rem}</style></head><body>",
               "<h1>REQ Evidence Audit</h1><p><strong>Static candidates only — not VERIFIED, PASS, or security certification.</strong></p>",
               "<p>P1 implementation: UNASSESSED · P2 verification: NOT_RUN</p>",
-              "<p>Contract: reqea.v1 · Source SHA: <code>", _h(audit.get("source_sha", "UNVERIFIED"), 40), "</code></p>",
+              "<p>Contract: reqea.v1 · Source SHA: <code>", _h(sha, 40), "</code></p>",
               "<p>Overall classification: <strong>",
-              _h(audit.get("status") if audit.get("status") in VALID_STATUSES else "UNASSESSED"), "</strong></p>"]
+              _h(audit.get("status") if isinstance(audit.get("status"), str) and audit.get("status") in VALID_STATUSES else "UNASSESSED"), "</strong></p>"]
     summary = audit.get("summary", {})
     if isinstance(summary, dict):
         chunks.append("<p>Counts (static classifications): ")
@@ -65,13 +69,13 @@ def render_html(audit: dict) -> str:
         if not isinstance(f, dict):
             continue
         status = f.get("status", "UNASSESSED")
-        if status not in VALID_STATUSES:
+        if not isinstance(status, str) or status not in VALID_STATUSES:
             status = "UNASSESSED"
         req_id = f.get("req_id", "UNKNOWN")
         if not isinstance(req_id, str) or not re.fullmatch(r"REQ-[0-9]{3,}", req_id):
             req_id = "INVALID_REQ_ID"
         chunks.extend(["<section><h2>", _h(req_id), " — ", _h(status), "</h2>",
-                       "<p>", _h(f.get("rationale") if f.get("rationale") in SAFE_RATIONALES
+                       "<p>", _h(f.get("rationale") if isinstance(f.get("rationale"), str) and f.get("rationale") in SAFE_RATIONALES
                                   else "manual review required; rationale redacted"), "</p>",
                        "<table><thead><tr><th>Source path</th><th>Symbol</th><th>Line</th><th>Reason</th></tr></thead><tbody>"])
         evs = f.get("evidence", [])
@@ -96,7 +100,7 @@ def render_html(audit: dict) -> str:
                 if not isinstance(c, dict):
                     continue
                 st = c.get("status")
-                st = st if st in VALID_STATUSES else "UNASSESSED"
+                st = st if isinstance(st, str) and st in VALID_STATUSES else "UNASSESSED"
                 # Criterion text may embed secrets or code snippets; publish index/status, not body.
                 chunks.extend(["<li>Criterion ", str(i), ": ", _h(st), " (human review required)</li>"])
         chunks.append("</ul><small>Next: inspect exact file/symbol and run separately authorized acceptance tests.</small>")
