@@ -112,6 +112,19 @@ class EvidenceTests(unittest.TestCase):
         self.assertIn("[path redacted]", html)
         self.assertIn("WARNING_REDACTED", html)
 
+    def test_malformed_report_values_do_not_execute_or_leak(self):
+        m, i = fixture()
+        a = evaluate(m, i, {})
+        a["source_sha"] = {"secret": "do-not-show"}
+        a["status"] = ["<script>bad</script>"]
+        a["findings"][0]["status"] = []
+        a["findings"][0]["rationale"] = {"private": "do-not-show"}
+        a["findings"][0]["acceptance_criteria"][0]["status"] = []
+        html = render_html(a)
+        self.assertNotIn("do-not-show", html)
+        self.assertNotIn("<script>", html)
+        self.assertIn("UNASSESSED", html)
+
     def test_invalid_path_not_evidence(self):
         m, i = fixture()
         m["requirements"][0]["explicit_refs"] = ["../../.env", "/tmp/secret.py"]
